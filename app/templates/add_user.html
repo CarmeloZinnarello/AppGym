@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiungi Utente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    
+    <div class="container">
+	<div class="nav-bar">
+		<a href="{{ url_for('admin.manage_users') }}">Torna alla Gestione Utenti</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+		
+    </div>
+	<header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+            <h1>{{ titolo }}</h1>
+        </header>
+	
+        <h1>Aggiungi Nuovo Utente</h1>
+        <form method="POST" action="{{ url_for('admin.add_user') }}"  enctype="multipart/form-data" class="form-grid">
+		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            
+            <label for="nome">Nome </label>
+            <input type="text" id="nome" name="nome" required>
+			 <label for="cognome">Cognome </label>
+            <input type="text" id="cognome" name="cognome" required>
+			 <label for="cf">C.F. </label>
+            <input type="text" id="cf" name="cf" >
+			 <label for="sesso">Sesso</label>
+                <select id="sesso" name="sesso" >
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                    <option value="Altro">Altro</option>
+                </select>
+            {% if current_user.is_admin %}
+            <label>Admin</label>
+            <input type="checkbox" name="is_admin"> 
+			
+			<label>Collaboratore</label>
+            <input type="checkbox" name="is_worker"> 
+            {% endif %}
+            
+            <label>Attivo </label>
+            <input type="checkbox" name="is_active" checked> 
+             <label for="logo">Manuale</label>
+			 <div class="image-upload">
+			  <input type="file" id="manuale" name="manuale" accept="application/pdf">
+			 </div>
+			 <label for="alimentare">Piano Alimentare</label>
+			 <div class="image-upload">
+			  <input type="file" id="alimentare" name="alimentare" accept="application/pdf">
+            </div>
+			 <label for="alimentare">Integrazione consigliata</label>
+			 <div class="image-upload">
+			  <input type="file" id="integrazione" name="integrazione" accept="application/pdf">
+            </div>
+            <div class="form-group full-width">
+            <button type="submit">Aggiungi Utente</button>
+			</div>
+        </form>
+        
+		 {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esercizi Scheda</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+	body{
+    margin:0;
+    padding:10px;
+
+    background:#041b4d;
+}
+        .container {
+         
+            background: #041b4d;
+            border-radius: 10px;
+     
+           
+            text-align: center;
+        }
+
+        .esercizio-card {
+            border-radius: 14px;
+            margin: 18px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            color: #ffffff;
+            padding: 15px;
+        }
+
+        .slide { display: none; }
+        .slide.active { display: block; }
+
+        .exercise-number {
+            background: #f2b705;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .exercise-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .note-view {
+            background: white;
+            color: #333;
+            border-radius: 10px;
+            padding: 10px;
+            min-height: 90px;
+        }
+
+        .serie-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .serie-row span { width: 70px; }
+
+        .serie-row input {
+            width: 80px;
+            padding: 6px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        .slide-controls button,
+        .giorno-nav button {
+             background: #f2b705;
+				color: #041b4d;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .giorno-sezione { display: none; }
+        .giorno-sezione.active { display: block; }
+
+        .giorno-nav span {
+            color: white;
+            font-weight: bold;
+        }
+
+        .hidden-output {
+            opacity: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .note-utente {
+            width: 70%;
+            min-height: 80px;
+            resize: vertical;
+            border-radius: 8px;
+            padding: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav-bar">
+        <a href="{{ url_for('user.manage_schede') }}">← Torna alle schede</a>
+    </div>
+
+    <h1>Esercizi della Scheda</h1>
+
+    <div class="giorno-nav">
+        <button type="button" id="prevGiorno">◀</button>
+        <span id="giornoLabel"></span>
+        <button type="button" id="nextGiorno">▶</button>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- TIMER -->
+    <div>
+        <h2>Cronometro</h2>
+        <div id="timer" style="font-size:80px;">00:00:00</div>
+        <button onclick="startTimer()">▶ Start</button>
+        <button onclick="stopTimer()">⏸ Stop</button>
+        <button onclick="resetTimer()">⟲ Reset</button>
+    </div>
+
+    <form method="POST" action="{{ url_for('user.salva_progressi') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        {% for giorno, esercizi in esercizi_per_giorno.items() %}
+        <div class="giorno-sezione">
+			<div >
+            <h2 style="color:white;">Giorno {{ giorno }}</h2>
+			
+				{{ tipi_per_giorno.get(giorno, '') }}
+			</div>
+            {% for numero, gruppo in esercizi.items() %}
+            <div class="esercizio-card slide">
+
+                <h4>
+                    <span class="exercise-number">{{ numero }}</span>
+                    Blocco esercizi
+                </h4>
+
+                {% for esercizio in gruppo %}
+                <div class="exercise-grid">
+
+                    <div>
+                        <p><strong>{{ esercizio.Tipoesercizi.nome | upper }}</strong></p>
+
+                        <div class="note-view">
+                            {{ esercizio.note or '' }}
+                        </div>
+
+                        <p>
+                            <strong>Recupero:</strong> {{ esercizio.recupero }} sec
+                        </p>
+
+                        {% if esercizio.Tipoesercizi.link %}
+                        <button type="button"
+                            onclick="window.open('{{ esercizio.Tipoesercizi.link }}', '_blank')">
+                            Guarda esempio
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <div class="serie-container">
+                            <div class="serie-row" style="font-weight:bold;">
+                                <span></span>
+                                <span>Kg</span>
+                                <span>Reps</span>
+                            </div>
+
+                            {% for i in range(esercizio.serie or 0) %}
+                            <div class="serie-row">
+                                <span>Serie {{ i+1 }}</span>
+                                <input type="number" step="0.1" min="0" class="kg" placeholder="Kg">
+                                <input type="number" min="0" class="reps" placeholder="Reps">
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <textarea name="esercizio_{{ esercizio.id }}_avanzamento"
+                                  class="hidden-output">{{ esercizio.avanzamento or '' }}</textarea>
+
+                        <p><strong>Le mie note:</strong></p>
+                        <textarea name="esercizio_{{ esercizio.id }}_noteUtente"
+                                  class="note-utente">{{ esercizio.noteUtente or '' }}</textarea>
+
+                        <button type="submit" class="save-btn">💾 Salva</button>
+                    </div>
+
+                </div>
+
+                <hr>
+                {% endfor %}
+
+            </div>
+            {% endfor %}
+
+            <div class="slide-controls">
+                <button type="button" onclick="prevSlide()">◀ Esercizio Precedente</button>
+                <button type="button" onclick="nextSlide()">Prossimo Esercizio ▶</button>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </form>
+
+</div>
+
+<script>
+// ------------------ SLIDER ------------------
+let currentGiorno = 0;
+let currentSlide = 0;
+const giorni = document.querySelectorAll(".giorno-sezione");
+
+function showGiorno(index, restoreSlide = false) {
+
+    giorni.forEach(g => g.classList.remove("active"));
+    giorni[index].classList.add("active");
+
+    document.getElementById("giornoLabel").innerText = "Giorno " + (index + 1);
+
+    currentGiorno = index;
+
+    if (restoreSlide) {
+        let savedSlide = localStorage.getItem("currentSlide_giorno_" + index);
+        currentSlide = savedSlide ? parseInt(savedSlide) : 0;
+    } else {
+        // Quando cambio giorno manualmente parto sempre dal primo esercizio
+        currentSlide = 0;
+    }
+
+    showSlide(currentSlide);
+}
+
+document.getElementById("prevGiorno").onclick = () => {
+    if (currentGiorno > 0) {
+        showGiorno(currentGiorno - 1, false);
+    }
+};
+
+document.getElementById("nextGiorno").onclick = () => {
+    if (currentGiorno < giorni.length - 1) {
+        showGiorno(currentGiorno + 1, false);
+    }
+};
+
+function getSlides() {
+    return giorni[currentGiorno].querySelectorAll(".slide");
+}
+
+function showSlide(index) {
+
+    let slides = getSlides();
+
+    slides.forEach(s => s.classList.remove("active"));
+
+    if (index < 0) index = 0;
+    if (index >= slides.length) index = slides.length - 1;
+
+    slides[index].classList.add("active");
+
+    currentSlide = index;
+
+    // Memorizzo sempre l'esercizio corrente del giorno corrente
+    localStorage.setItem(
+        "currentSlide_giorno_" + currentGiorno,
+        currentSlide
+    );
+}
+
+function nextSlide() {
+    showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+    showSlide(currentSlide - 1);
+}
+
+// Ripristino ultimo giorno ed ultimo esercizio SOLO al caricamento pagina
+let savedGiorno = localStorage.getItem("currentGiorno");
+
+showGiorno(
+    savedGiorno ? parseInt(savedGiorno) : 0,
+    true
+);
+
+// ------------------ SALVATAGGIO ------------------
+document.querySelector("form").addEventListener("submit", function () {
+
+    localStorage.setItem("currentGiorno", currentGiorno);
+    localStorage.setItem("currentSlide_giorno_" + currentGiorno, currentSlide);
+
+    document.querySelectorAll(".serie-container").forEach(container => {
+
+        let rows = container.querySelectorAll(".serie-row");
+        let result = "";
+        let serieNumber = 1;
+
+        rows.forEach((row, idx) => {
+            if (idx === 0) return;
+
+            let kg = row.querySelector(".kg").value || 0;
+            let reps = row.querySelector(".reps").value || 0;
+
+            result += `Serie ${serieNumber}: ${kg}kg x ${reps}\n`;
+            serieNumber++;
+        });
+
+        let textarea = container.parentElement.querySelector(".hidden-output");
+        if (textarea) textarea.value = result.trim();
+    });
+
+});
+
+// ------------------ PRECOMPILAZIONE ------------------
+window.addEventListener("DOMContentLoaded", () => {
+
+    document.querySelectorAll(".serie-container").forEach(container => {
+
+        let textarea = container.parentElement.querySelector(".hidden-output");
+        let text = textarea.value;
+
+        if (!text) return;
+
+        let lines = text.split("\n");
+        let rows = container.querySelectorAll(".serie-row");
+
+        lines.forEach((line, index) => {
+
+            let match = line.match(/Serie\s+\d+:\s*([\d\.]+)kg\s*x\s*(\d+)/i);
+
+            if (match && rows[index + 1]) {
+                rows[index + 1].querySelector(".kg").value = match[1];
+                rows[index + 1].querySelector(".reps").value = match[2];
+            }
+
+        });
+
+    });
+
+});
+
+// ------------------ TIMER ------------------
+let timer = null;
+let startTime = localStorage.getItem("startTime");
+
+function updateDisplay() {
+    if (!startTime) return;
+    let e = Math.floor((Date.now() - startTime) / 1000);
+    let h = Math.floor(e / 3600);
+    let m = Math.floor((e % 3600) / 60);
+    let s = e % 60;
+    document.getElementById("timer").innerHTML =
+        String(h).padStart(2, '0') + ":" +
+        String(m).padStart(2, '0') + ":" +
+        String(s).padStart(2, '0');
+}
+
+function startTimer() {
+    if (!startTime) {
+        startTime = Date.now();
+        localStorage.setItem("startTime", startTime);
+    }
+    if (!timer) timer = setInterval(updateDisplay, 1000);
+}
+
+function stopTimer() { clearInterval(timer); timer = null; }
+
+function resetTimer() {
+    clearInterval(timer);
+    timer = null;
+    startTime = null;
+    localStorage.removeItem("startTime");
+    document.getElementById("timer").innerHTML = "00:00:00";
+}
+
+if (startTime) timer = setInterval(updateDisplay, 1000);
+</script>
+
+</body>
+</html>

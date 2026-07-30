@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titolo }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+<div class="nav-bar">
+		<a href="{{ url_for('admin.dashboard') }}">Torna alla Dashboard</a>
+       
+		
+    </div>
+<h1>Gestione Parametri</h1>
+
+<form method="POST" enctype="multipart/form-data" class="form-grid">
+     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-group">
+        <label for="titolo">Titolo</label>
+        <input type="text" id="titolo" name="titolo" value="{{ parametri.titolo or '' }}">
+    </div>
+
+    
+    <div class="form-group">
+        <label for="sliderPaginaPrincipale">Slider Pagina Principale</label>
+        <textarea id="sliderPaginaPrincipale" name="sliderPaginaPrincipale">
+{{ parametri.sliderPaginaPrincipale or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="immaginePaginaPrincipale">Immagine Pagina Principale</label>
+        <input type="file" id="immaginePaginaPrincipale" name="immaginePaginaPrincipale">
+    </div>
+
+
+    <div class="form-group">
+        <label for="domanda1">Domanda 1</label>
+        <textarea id="domanda1" name="domanda1">{{ parametri.domanda1 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda2">Domanda 2</label>
+        <textarea id="domanda2" name="domanda2">{{ parametri.domanda2 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda3">Domanda 3</label>
+        <textarea id="domanda3" name="domanda3">{{ parametri.domanda3 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda4">Domanda 4</label>
+        <textarea id="domanda4" name="domanda4">{{ parametri.domanda4 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda5">Domanda 5</label>
+        <textarea id="domanda5" name="domanda5">{{ parametri.domanda5 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda6">Domanda 6</label>
+        <textarea id="domanda6" name="domanda6">{{ parametri.domanda6 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda7">Domanda 7</label>
+        <textarea id="domanda7" name="domanda7">{{ parametri.domanda7 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda8">Domanda 8</label>
+        <textarea id="domanda8" name="domanda8">{{ parametri.domanda8 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda9">Domanda 9</label>
+        <textarea id="domanda9" name="domanda9">{{ parametri.domanda9 or '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="domanda10">Domanda 10</label>
+        <textarea id="domanda10" name="domanda10">{{ parametri.domanda10 or '' }}</textarea>
+    </div>
+
+    <button type="submit">Salva Parametri</button>
+</form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiungi Esercizio alla Scheda</title>
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	 <style>
+/* Versione compatta solo per questa pagina */
+
+.form-grid {
+    gap: 6px;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+    height: 35px;          /* 🔥 altezza ridotta */
+    padding: 1px 1px;      /* meno spazio interno */
+    font-size: 15px;       /* testo più compatto */
+    box-sizing: 60%;
+	width: 100%;
+}
+
+.form-grid textarea {
+    height: 60px;          /* note più piccole */
+    resize: vertical;
+}
+
+/* Riduce spazio del titolo */
+h1 {
+    margin: 10px 0 15px 0;
+}
+
+/* Bottone più proporzionato */
+.form-grid button {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+	<div class="nav-bar">
+            <a href="{{ url_for('admin.dashboard') }}">Torna alla Dashboard</a>
+        </div>
+		
+        <h1>Aggiungi Esercizio alla Scheda</h1>
+     
+        <form method="POST" class="form-grid">
+		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+		 {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+            <!-- Scheda (nascondi il campo scheda, dato che è già passato tramite URL) -->
+            <input type="hidden" name="scheda" value="{{ scheda_id }}">
+				 <label for="giorno">Giorno:</label>
+                <input type="number" name="giorno" id="giorno" required min="1" step="1">
+          
+               <!-- <label for="esercizio">Esercizio:</label>
+                <select name="esercizio" id="esercizio" required>
+                    {% for tipo in tipoesercizi %}
+                        <option value="{{ tipo.id }}">{{ tipo.nome }} - {{ tipo.tipo }}</option>
+                    {% endfor %}
+                </select>-->
+           <label for="esercizio_search">Esercizio:</label>
+
+			<input list="lista_esercizi" id="esercizio_search" placeholder="Cerca esercizio..." autocomplete="off">
+
+			<datalist id="lista_esercizi">
+				{% for tipo in tipoesercizi %}
+					<option value="{{ tipo.nome }} - {{ tipo.tipo }}" data-id="{{ tipo.id }}"></option>
+				{% endfor %}
+			</datalist>
+
+			<input type="hidden" name="esercizio" id="esercizio_id">
+			
+				<label for="numero">Numero Esercizio:</label>
+                <input type="number" name="numero" id="numero" required min="1" step="1">
+           
+            
+                <label for="recupero">Recupero (secondi):</label>
+                <input name="recupero" id="recupero" required>
+            
+
+            <!-- Serie -->
+            
+                <label for="serie">Serie:</label>
+                <input type="number" name="serie" id="serie"  min="1" step="1">
+            
+
+            
+            <!-- Note -->
+           
+                <label for="note">Indicazioni:</label>
+                <textarea name="note" id="note"></textarea>
+
+
+            <!-- Bottone per inviare il form -->
+             <div class="form-group full-width">
+                <button type="submit">Aggiungi Esercizio</button>
+            </div>
+        </form>
+    </div>
+	<script>
+const input = document.getElementById("esercizio_search");
+const datalist = document.getElementById("lista_esercizi");
+const hidden = document.getElementById("esercizio_id");
+
+input.addEventListener("input", function() {
+    const options = datalist.options;
+
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === input.value) {
+            hidden.value = options[i].dataset.id;
+            return;
+        }
+    }
+
+    hidden.value = "";
+});
+</script>
+</body>
+</html>

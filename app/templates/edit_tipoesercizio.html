@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica Esercizio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+ <div class="nav-bar">
+            <a href="{{ url_for('admin.manage_schede') }}">Torna alle schede</a>
+        </div>
+        <header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+            <h1>{{ titolo }}</h1>
+        </header>
+    <h1>Modifica esercizio</h1>
+
+    <form method="POST" class="form-grid">
+	 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+	    <label>Nome</label>
+        <input type="text" name="nome" required
+               value="{{ esercizio.nome }}">
+		<label>Link</label>
+        <input type="text" name="link"
+               value="{{ esercizio.link or '' }}">
+		<label>Tipo</label>
+        <select name="tipo" required>
+            {% for t in ['Gambe','Petto','Schiena','Spalle','Braccia','Core','Stretching'] %}
+                <option value="{{ t }}"
+                    {% if esercizio.tipo == t %}selected{% endif %}>
+                    {{ t }}
+                </option>
+            {% endfor %}
+        </select>
+		 <div class="form-group full-width">
+        <button type="submit">Salva modifiche</button>
+          </div>
+    </form>
+	
+</div>
+
+</body>
+</html>

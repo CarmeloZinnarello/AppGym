@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Esercizi Scheda</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .note-view {
+            background: white;
+            color: #333;
+            border-radius: 10px;
+            padding: 10px;
+            min-height: 90px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .esercizio-card {
+            background: linear-gradient(145deg, #0f2a38, #12394d);
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            color: #ffffff;
+        }
+
+        .esercizio-card h4 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .progress-inputs {
+            padding: 15px;
+            background: linear-gradient(145deg, #1f6f78, #2c8c96);
+        }
+
+        .progress-inputs label {
+            display: block;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .giorno-nav {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .giorno-nav button {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .giorno-nav span {
+            font-weight: bold;
+            font-size: 16px;
+            color: white;
+        }
+
+        .giorno-sezione { display: none; }
+        .giorno-sezione.active { display: block; }
+
+        @media (max-width: 768px) {
+            .esercizio-card {
+                padding: 10px;
+            }
+        }
+
+        .exercise-number {
+            background: #D4AF37;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 20px;
+        }
+		.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background: #002A41;
+    margin: 10% auto;
+    padding: 20px;
+    width: 300px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav-bar">
+        <a href="{{ url_for('admin.manage_schede') }}">Torna alle schede</a>
+    </div>
+
+    <h1>Esercizi della Scheda</h1>
+
+    <div style="text-align:center; margin-bottom:20px;">
+        <a href="{{ url_for('admin.add_esercizioScheda', scheda_id=scheda_id) }}">
+            <button type="button">Aggiungi esercizio</button>
+        </a>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+	<button type="button" onclick="openModal()">📋 Copia scheda</button>
+
+<div id="copiaModal" class="modal">
+    <div class="modal-content">
+
+        <h3>Copia scheda</h3>
+
+        <!-- STEP 1 -->
+        <label>Seleziona utente</label>
+        <select id="utenteSelect" onchange="loadSchede()">
+            <option value="">-- scegli utente --</option>
+            {% for u in utenti %}
+                <option value="{{ u.id }}">{{ u.username }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- STEP 2 -->
+        <label>Seleziona scheda</label>
+        <select id="schedaSelect">
+            <option value="">-- prima scegli utente --</option>
+        </select>
+
+        <br><br>
+
+        <button onclick="copiaScheda()">Copia</button>
+        <button onclick="closeModal()">Chiudi</button>
+
+    </div>
+</div>
+
+    <hr>
+
+    <!-- NAV GIORNI -->
+    <div class="giorno-nav">
+        <button type="button" id="prevGiorno">◀ Giorno precedente</button>
+        <span id="giornoLabel"></span>
+        <button type="button" id="nextGiorno">Giorno successivo ▶</button>
+    </div>
+
+    <!-- CONTENUTO -->
+    {% for giorno, esercizi in esercizi_per_giorno.items() %}
+    <div class="giorno-sezione" data-giorno="{{ giorno }}">
+
+        <h2>Giorno {{ giorno }}</h2>
+
+        {% for esercizio in esercizi %}
+        <div class="esercizio-card">
+
+            <h4>
+                <span class="exercise-number">{{ esercizio.numero }}</span> 
+                - {{ esercizio.Tipoesercizi.nome }}
+            </h4>
+
+            <p><strong>Recupero:</strong> {{ esercizio.recupero }} secondi</p>
+
+            <div class="progress-inputs">
+                <label>Indicazioni</label>
+                <div class="note-view">
+                    {{ esercizio.note or 'Nessuna nota' }}
+                </div>
+            </div>
+
+            <form method="POST"
+                  action="{{ url_for('admin.delete_EsercizioScheda', id=esercizio.id) }}"
+                  style="display:inline;">
+                <button class="delete-button" type="submit">Elimina</button>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            </form>
+			<a href="{{ url_for('admin.modifica_esercizio',  id=esercizio.id) }}">
+								<button type="button">Modifica esercizio</button>
+							</a>
+        </div>
+        {% endfor %}
+
+    </div>
+    {% endfor %}
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const giorni = document.querySelectorAll(".giorno-sezione");
+    let currentIndex = 0;
+
+    const label = document.getElementById("giornoLabel");
+    const prevBtn = document.getElementById("prevGiorno");
+    const nextBtn = document.getElementById("nextGiorno");
+
+    function showGiorno(index) {
+        giorni.forEach(g => g.classList.remove("active"));
+        giorni[index].classList.add("active");
+
+        // 🔥 usa il giorno reale
+        const giornoReale = giorni[index].dataset.giorno;
+        label.textContent = "Giorno " + giornoReale;
+    }
+
+    prevBtn.addEventListener("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            showGiorno(currentIndex);
+        }
+    });
+
+    nextBtn.addEventListener("click", () => {
+        if (currentIndex < giorni.length - 1) {
+            currentIndex++;
+            showGiorno(currentIndex);
+        }
+    });
+
+    showGiorno(currentIndex);
+});
+
+function openModal() {
+    document.getElementById("copiaModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("copiaModal").style.display = "none";
+}
+
+// 🔥 carica schede utente
+function loadSchede() {
+    const userId = document.getElementById("utenteSelect").value;
+
+    if (!userId) return;
+
+    fetch(`{{ url_for('admin.get_schede', user_id=0) }}`.replace('0', userId))
+        .then(res => res.json())
+        .then(data => {
+            const select = document.getElementById("schedaSelect");
+            select.innerHTML = "";
+
+            data.forEach(s => {
+                const opt = document.createElement("option");
+                opt.value = s.id;
+                opt.textContent = s.titolo || "Scheda " + s.id;
+                select.appendChild(opt);
+            });
+        })
+        .catch(err => console.error("Errore loadSchede:", err));
+}
+
+// 🔥 copia scheda
+function copiaScheda() {
+    const schedaSrc = document.getElementById("schedaSelect").value;
+    const schedaDest = "{{ scheda_id }}";
+
+    if (!schedaSrc) {
+        alert("Seleziona una scheda!");
+        return;
+    }
+
+    fetch(`{{ url_for('admin.copia_scheda_ajax') }}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token() }}"   // 🔥 importante se usi CSRF
+        },
+        body: JSON.stringify({
+            scheda_src_id: schedaSrc,
+            scheda_dest_id: schedaDest
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || "Copiato!");
+        location.reload();
+    })
+    .catch(err => {
+        console.error("Errore copia:", err);
+        alert("Errore durante la copia");
+    });
+}
+</script>
+
+</body>
+</html>

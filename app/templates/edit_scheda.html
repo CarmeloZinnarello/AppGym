@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica Scheda</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    
+    <div class="container">
+        <div class="nav-bar">
+            <a href="{{ url_for('admin.manage_schede') }}">Torna alle schede</a>
+        </div>
+        <header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+            <h1>{{ titolo }}</h1>
+        </header>
+    
+        <h1>Modifica Scheda</h1>
+        <form method="POST" class="form-grid">
+
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <!-- Campo Titolo: precompilato con il valore della scheda -->
+            <label>Titolo</label>
+            <input type="text" name="titolo" value="{{ scheda.titolo }}" required>
+
+            <!-- Campo Data Inizio: precompilato con il valore della scheda -->
+            <label>Data Inizio</label>
+            <input type="date" name="data_inizio" value="{{ scheda.data_inizio }}" required>
+
+            <!-- Campo Data Fine: precompilato con il valore della scheda -->
+            <!--<label>Data Fine</label>
+            <input type="date" name="data_fine" value="{{ scheda.data_fine }}"> -->
+			 <label>Attiva</label>
+            <input type="checkbox" name="is_active" {% if scheda.is_active %}checked{% endif %}> 
+            <div class="form-group full-width">
+                <button type="submit" class="btn btn-success">Aggiorna</button>
+            </div>
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

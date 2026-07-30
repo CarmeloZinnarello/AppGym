@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Scheda</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+			margin:0;
+			padding:10px;
+
+			background:#041b4d;
+        }
+		
+        table {
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h2 {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+	<div class="nav-bar">
+			<a href="{% if current_user.is_admin %}{{ url_for('admin.manage_schede') }}{% else %}{{ url_for('user.manage_schede') }}{% endif %}">
+			<i class="fas fa-arrow-left"></i>
+    Torna alle Schede
+</a>
+
+		</div>
+	 <header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+            <h1>{{ titolo }}</h1>
+        </header>
+    <h1>Scheda esercizi</h1>
+
+    {% for giorno, esercizi in esercizi_per_giorno.items() %}
+        <h2>Giorno {{ giorno }}</h2>
+		<div >
+			{{ tipi_per_giorno.get(giorno, '') }}
+		</div>
+        <table>
+            <tr>
+                <th>Esercizio</th>
+                <th>Serie</th>
+                <th>Recupero</th>
+                <th>Note</th>
+            </tr>
+
+            {% for e in esercizi %}
+            <tr>
+                <td>{{ e.Tipoesercizi.nome}}</td>
+                <td>{{ e.serie }}</td>
+                
+                <td>{{ e.recupero }}</td>
+                <td>{{ e.note }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    {% endfor %}
+</div>
+</body>
+</html>

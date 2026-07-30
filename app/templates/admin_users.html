@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Utenti</title>
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Segoe UI',sans-serif;
+            min-height:100vh;
+
+            background:#041b4d;
+
+            display:flex;
+            justify-content:center;
+            align-items:flex-start;
+
+            padding:40px 20px;
+
+            overflow-x:hidden;
+        }
+
+        .container{
+            width:100%;
+            max-width:1400px;
+        }
+
+        /* NAVBAR */
+
+        .nav-bar{
+            display:flex;
+            justify-content:flex-end;
+            gap:12px;
+            margin-bottom:25px;
+            flex-wrap:wrap;
+        }
+
+        .nav-bar a{
+            text-decoration:none;
+
+            background:#f2b705;
+
+            color:#041b4d;
+
+            padding:12px 18px;
+
+            border-radius:12px;
+
+            font-weight:700;
+
+            transition:0.25s;
+        }
+
+        .nav-bar a:hover{
+            transform:translateY(-2px);
+
+            background:#ffd028;
+
+            box-shadow:0 8px 20px rgba(242,183,5,0.35);
+        }
+
+        /* HEADER */
+
+        header{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        .logo{
+            width:90px;
+            height:90px;
+            border-radius:50%;
+            object-fit:cover;
+            border:4px solid #f2b705;
+            margin-bottom:12px;
+        }
+
+        header h1{
+            color:white;
+            font-size:2.3rem;
+            font-weight:800;
+        }
+
+        /* CARD */
+
+        .table-card{
+            background:rgba(4,27,77,0.95);
+
+            border-radius:28px;
+
+            padding:30px;
+
+            box-shadow:0 10px 35px rgba(0,0,0,0.35);
+
+            border:1px solid rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(10px);
+        }
+		.row a,
+		.row a:hover,
+		.row a:focus,
+		.row a:active,
+		.row a:visited{
+			text-decoration:none !important;
+			border:none !important;
+		}
+
+		.action-btn,
+		.action-btn:hover,
+		.action-btn:focus,
+		.action-btn:active,
+		.action-btn i,
+		.action-btn span{
+			text-decoration:none !important;
+		}
+
+		button{
+			text-decoration:none !important;
+		}
+		a{
+			text-decoration:none !important;
+		}
+        /* ADD BUTTON */
+
+        .top-actions{
+            margin-bottom:25px;
+        }
+
+        .add-user-btn{
+            border:none;
+
+            background:linear-gradient(
+                135deg,
+                #f2b705,
+                #ffd028
+            );
+
+            color:#041b4d;
+
+            padding:14px 22px;
+
+            border-radius:14px;
+
+            font-weight:800;
+
+            font-size:0.95rem;
+
+            cursor:pointer;
+
+            transition:0.25s;
+
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .add-user-btn:hover{
+            transform:translateY(-2px);
+
+            box-shadow:0 10px 24px rgba(242,183,5,0.35);
+        }
+
+        /* TABLE */
+
+        table.dataTable{
+             color:#041b4d !important;
+			border-collapse:collapse !important;
+			width:100% !important;
+
+			background:white !important;
+
+			border-radius:18px;
+			overflow:hidden;
+        }
+
+        table.dataTable thead{
+            background:#041b4d;
+        }
+
+        table.dataTable thead th{
+           color:#f2b705 !important;
+
+			border-bottom:none !important;
+
+			font-size:0.95rem;
+
+			padding:18px 12px !important;
+        }
+
+        table.dataTable tbody tr{
+              background:white !important;
+
+			transition:0.2s;
+        }
+
+        table.dataTable tbody tr:nth-child(even){
+			background:#f5f7fb !important;
+		}
+
+		table.dataTable tbody tr:hover{
+			background:#eaf1ff !important;
+		}
+
+		table.dataTable tbody td{
+			color:#041b4d !important;
+
+			padding:18px 12px !important;
+
+			border-color:#dde6f5 !important;
+
+			vertical-align:top;
+		}
+
+        /* DATATABLES */
+
+        .dataTables_wrapper{
+            color:white;
+        }
+
+        .dataTables_filter input,
+        .dataTables_length select{
+            background:rgba(255,255,255,0.08);
+
+            border:1px solid rgba(255,255,255,0.12);
+
+            color:white !important;
+
+            border-radius:10px;
+
+            padding:8px 12px;
+        }
+
+        .dataTables_filter label,
+        .dataTables_length label,
+        .dataTables_info{
+            color:white !important;
+        }
+
+        .paginate_button{
+            color:white !important;
+            border-radius:10px !important;
+        }
+
+        .paginate_button.current{
+            background:#f2b705 !important;
+            color:#041b4d !important;
+            border:none !important;
+        }
+
+        /* ACTION BUTTONS */
+
+        .action-buttons{
+            display:grid;
+
+            grid-template-columns:repeat(2, minmax(140px,1fr));
+
+            gap:10px;
+
+            align-items:stretch;
+        }
+
+        .action-buttons a,
+        .action-buttons form{
+            width:100%;
+        }
+
+        .action-buttons form button{
+            width:100%;
+        }
+
+        .action-btn{
+            width:100%;
+
+            border:none;
+
+            padding:10px 14px;
+
+            border-radius:12px;
+
+            font-weight:700;
+
+            cursor:pointer;
+
+            transition:0.25s;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            gap:8px;
+
+            min-height:46px;
+        }
+
+        .action-btn:hover{
+            transform:translateY(-2px);
+        }
+
+        /* COLORI */
+
+        .btn-schede{
+            background:#3498db;
+            color:white;
+        }
+
+        .btn-schede:hover{
+            background:#4aa8ea;
+            box-shadow:0 8px 18px rgba(52,152,219,0.35);
+        }
+
+        .btn-add{
+            background:#2ecc71;
+            color:white;
+        }
+
+        .btn-add:hover{
+            background:#45d481;
+            box-shadow:0 8px 18px rgba(46,204,113,0.35);
+        }
+
+        .btn-edit{
+            background:#f39c12;
+            color:white;
+        }
+
+        .btn-edit:hover{
+            background:#ffb13a;
+            box-shadow:0 8px 18px rgba(243,156,18,0.35);
+        }
+
+        .btn-delete{
+            background:#e74c3c;
+            color:white;
+        }
+
+        .btn-delete:hover{
+            background:#ff6252;
+            box-shadow:0 8px 18px rgba(231,76,60,0.35);
+        }
+
+        .btn-manuale{
+            background:#9b59b6;
+            color:white;
+        }
+
+        .btn-manuale:hover{
+            background:#ac6ac7;
+            box-shadow:0 8px 18px rgba(155,89,182,0.35);
+        }
+
+        .btn-food{
+            background:#16a085;
+            color:white;
+        }
+
+        .btn-food:hover{
+            background:#20b49a;
+            box-shadow:0 8px 18px rgba(22,160,133,0.35);
+        }
+
+        .btn-integratori{
+            background:#e67e22;
+            color:white;
+        }
+
+        .btn-integratori:hover{
+            background:#ff922f;
+            box-shadow:0 8px 18px rgba(230,126,34,0.35);
+        }
+
+        /* FLASH */
+
+        .flash-messages{
+            margin-top:25px;
+        }
+
+        .flash-messages p{
+            padding:14px;
+            border-radius:12px;
+            margin-bottom:10px;
+            text-align:center;
+            font-weight:600;
+        }
+
+        .success{
+            background:rgba(46,204,113,0.15);
+            color:#2ecc71;
+        }
+
+        .danger,
+        .error{
+            background:rgba(231,76,60,0.15);
+            color:#ff6b6b;
+        }
+
+        /* MOBILE */
+
+        @media screen and (max-width:768px){
+
+            body{
+                padding:20px 10px;
+            }
+
+            header h1{
+                font-size:1.7rem;
+            }
+
+            .table-card{
+                padding:18px;
+                border-radius:22px;
+            }
+
+            .nav-bar{
+                justify-content:center;
+            }
+
+            .nav-bar a{
+                width:100%;
+                text-align:center;
+            }
+
+            .action-buttons{
+                grid-template-columns:1fr;
+            }
+
+            .action-btn{
+                width:100%;
+            }
+
+            table.dataTable tbody td{
+                font-size:0.9rem;
+            }
+
+            .dataTables_wrapper{
+                overflow-x:auto;
+            }
+        }
+
+        /* SORTING COLORS */
+
+       table.dataTable.display tbody tr>.sorting_1,
+		table.dataTable.order-column.stripe tbody tr>.sorting_1{
+			background:#eef3ff !important;
+			color:#041b4d !important;
+		}
+
+		table.dataTable.display tbody tr>.sorting_2,
+		table.dataTable.order-column.stripe tbody tr>.sorting_2{
+			background:#dee0e3 !important;
+			color:#041b4d !important;
+		}
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav-bar">
+
+        <a href="{{ url_for('admin.dashboard') }}">
+            <i class="fas fa-arrow-left"></i>
+            Torna alla Dashboard
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </a>
+
+    </div>
+
+    <header>
+
+        <img src="{{ url_for('static', filename='logo.png') }}"
+             alt="Logo"
+             class="logo">
+
+        <h1>{{ titolo }}</h1>
+
+    </header>
+
+    <div class="table-card">
+
+        <div class="top-actions">
+
+            <a href="{{ url_for('admin.add_user') }}"
+               style="text-decoration:none;">
+
+                <button type="button" class="add-user-btn">
+                    <i class="fas fa-user-plus"></i>
+                    Aggiungi Utente
+                </button>
+
+            </a>
+
+        </div>
+
+        <table id="usersTable" class="display">
+
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Sesso</th>
+                <th>Admin</th>
+                <th>Collaboratore</th>
+                <th>Attivo</th>
+                <th>Azioni</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {% for user in users %}
+            <tr>
+
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.nome }}</td>
+                <td>{{ user.cognome }}</td>
+                <td>{{ user.sesso }}</td>
+                <td>{{ "Sì" if user.is_admin else "No" }}</td>
+                <td>{{ "Sì" if user.is_worker else "No" }}</td>
+                <td>{{ "Sì" if user.is_active else "No" }}</td>
+
+                <td>
+
+                    <div class="action-buttons">
+
+                        <a href="{{ url_for('admin.manage_schede', user_id=user.id) }}">
+                            <button type="button"
+                                    class="action-btn btn-schede">
+                                <i class="fas fa-dumbbell"></i>
+                                Schede
+                            </button>
+                        </a>
+						
+						 <a href="{{ url_for('user.grafico_peso', user_id=user.id) }}">
+                            <button type="button"
+                                    class="action-btn btn-schede">
+                                <i class="fas fa-weight"></i>
+                                Peso
+                            </button>
+                        </a>
+						
+                        <a href="{{ url_for('admin.add_scheda', user_id=user.id) }}">
+                            <button type="button"
+                                    class="action-btn btn-add">
+                                <i class="fas fa-plus"></i>
+                                Aggiungi Scheda
+                            </button>
+                        </a>
+
+                        <a href="{{ url_for('admin.edit_user', user_id=user.id) }}">
+                            <button type="button"
+                                    class="action-btn btn-edit">
+                                <i class="fas fa-edit"></i>
+                                Modifica
+                            </button>
+                        </a>
+
+                        <form method="POST"
+                              action="{{ url_for('admin.delete_user', user_id=user.id) }}">
+
+                            <input type="hidden"
+                                   name="csrf_token"
+                                   value="{{ csrf_token() }}">
+
+                            <button class="action-btn btn-delete"
+                                    type="submit">
+                                <i class="fas fa-trash"></i>
+                                Elimina
+                            </button>
+
+                        </form>
+
+                        <button
+                            onclick="window.location.href='{{ url_for('admin.apri_manuale', user_id=user.id) }}'"
+                            class="action-btn btn-manuale">
+
+                            <i class="fas fa-book"></i>
+                            Manuale
+
+                        </button>
+
+                        <button
+                            onclick="window.location.href='{{ url_for('admin.apri_alimentare', user_id=user.id) }}'"
+                            class="action-btn btn-food">
+
+                            <i class="fas fa-utensils"></i>
+                            Alimentare
+
+                        </button>
+
+                        <button
+                            onclick="window.location.href='{{ url_for('admin.apri_integrazione', user_id=user.id) }}'"
+                            class="action-btn btn-integratori">
+
+                            <i class="fas fa-capsules"></i>
+                            Integrazione
+
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+
+            {% for category, message in messages %}
+            <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+
+        </div>
+        {% endif %}
+        {% endwith %}
+
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript"
+        charset="utf8"
+        src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+$(document).ready(function () {
+
+    $('#usersTable').DataTable({
+
+        responsive: true,
+
+        pageLength: 10,
+
+        language: {
+
+            url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/Italian.json",
+
+            search: "Cerca:",
+
+            lengthMenu: "Mostra _MENU_ utenti",
+
+            info: "Vista da _START_ a _END_ di _TOTAL_ utenti",
+
+            infoEmpty: "Nessun utente disponibile",
+
+            zeroRecords: "Nessun utente trovato",
+
+            paginate: {
+                previous: "Precedente",
+                next: "Successivo"
+            }
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

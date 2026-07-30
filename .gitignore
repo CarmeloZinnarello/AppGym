@@ -1,0 +1,36 @@
+# Ambiente virtuale
+venv/
+.venv/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+
+# Database locale
+instance/app.db
+*.db
+
+# Configurazioni IDE
+.vscode/
+.idea/
+
+# Variabili d'ambiente
+.env
+
+# Log
+*.log
+
+# File temporanei
+*.tmp
+
+# Upload degli utenti
+uploads/*
+!uploads/.gitkeep
+
+# File sensibili
+token.txt
+infoTelegram.txt
+
+# Upload utenti
+app/static/uploads/user/*
+!app/static/uploads/user/.gitkeep

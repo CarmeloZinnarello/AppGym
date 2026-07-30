@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esercizi Scheda</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        /* CARD ESERCIZIO */
+        .esercizio-card {
+            background: linear-gradient(145deg, #0f2a38, #12394d);
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            color: #ffffff;
+            padding: 15px;
+        }
+
+        .esercizio-card h4 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* NUMERO ESERCIZIO */
+        .exercise-number {
+            background: #D4AF37;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        /* GRID */
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .exercise-grid p {
+            margin: 6px 0;
+        }
+
+        /* BOX PROGRESSI */
+        .progress-inputs {
+            padding: 15px;
+            background: linear-gradient(145deg, #1f6f78, #2c8c96);
+            border-radius: 10px;
+        }
+
+        .progress-inputs label {
+            display: block;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .progress-inputs textarea {
+            width: 100%;
+            min-height: 90px;
+            border-radius: 10px;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        .progress-inputs textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+        }
+
+        /* NAV GIORNI */
+        .giorno-nav {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .giorno-nav button {
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .giorno-nav span {
+            font-weight: bold;
+            font-size: 16px;
+            color: white;
+        }
+
+        .giorno-sezione { display: none; }
+        .giorno-sezione.active { display: block; }
+
+        @media (max-width: 768px) {
+            .exercise-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav-bar">
+        <a href="{{ url_for('user.progressiScheda', scheda_id=scheda_id) }}">
+            ← Torna ai progressi
+        </a>
+    </div>
+
+    <h1>Esercizi della Scheda</h1>
+
+    <!-- NAV GIORNI -->
+    <div class="giorno-nav">
+        <button type="button" id="prevGiorno">◀ Giorno precedente</button>
+        <span id="giornoLabel"></span>
+        <button type="button" id="nextGiorno">Giorno successivo ▶</button>
+    </div>
+
+    <form method="POST" action="{{ url_for('user.salva_progressi') }}">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% for giorno, esercizi in esercizi_per_giorno.items() %}
+        <div class="giorno-sezione" data-giorno="{{ loop.index }}">
+            <h2 style="color:white;">Giorno {{ giorno }}</h2>
+
+            {% for esercizio in esercizi %}
+            <div class="esercizio-card">
+
+                <h4>
+                    <span class="exercise-number">{{ esercizio.numero }}</span>
+                    {{ esercizio.Tipoesercizi.nome | upper }}
+                </h4>
+
+                <div class="exercise-grid">
+                    <div>
+                        <p><strong>Serie:</strong> {{ esercizio.serie }}</p>
+                        <p><strong>Ripetizioni:</strong> {{ esercizio.ripetizioni }}</p>
+                        <p><strong>Carico:</strong> {{ esercizio.carico }} kg</p>
+                        <p><strong>Recupero:</strong> {{ esercizio.recupero }} sec</p>
+                    </div>
+
+                    <div class="progress-inputs">
+                        <label>Avanzamento</label>
+                        <textarea name="esercizio_{{ esercizio.id }}_note">
+{{ esercizio.avanzamento or '' }}
+                        </textarea>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+
+    </form>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const giorni = document.querySelectorAll(".giorno-sezione");
+    let currentIndex = 0;
+
+    const label = document.getElementById("giornoLabel");
+    const prevBtn = document.getElementById("prevGiorno");
+    const nextBtn = document.getElementById("nextGiorno");
+
+    function showGiorno(index) {
+        giorni.forEach(g => g.classList.remove("active"));
+        giorni[index].classList.add("active");
+        label.textContent = "Giorno " + (index + 1);
+    }
+
+    prevBtn.addEventListener("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            showGiorno(currentIndex);
+        }
+    });
+
+    nextBtn.addEventListener("click", () => {
+        if (currentIndex < giorni.length - 1) {
+            currentIndex++;
+            showGiorno(currentIndex);
+        }
+    });
+
+    showGiorno(currentIndex);
+});
+</script>
+
+</body>
+</html>

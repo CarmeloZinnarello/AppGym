@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressi Scheda</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+	<link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+	  <style>
+        body {
+            background-color: white;
+            font-family:'Segoe UI',sans-serif;
+            min-height:100vh;
+
+			margin:0;
+			padding:10px;
+			color : white;
+			background:#041b4d;
+        }
+		
+		 </style>
+</head>
+<body>
+    <div class="container">
+	
+	<div class="nav-bar">
+		{% if current_user.is_admin %}
+		<a href="{{ url_for('admin.manage_schede') }}">Torna alle schede</a>
+		{% else %}
+		
+        <a href="{{ url_for('user.manage_schede') }}">← Torna alle schede</a>
+		{% endif %}
+    </div>
+       
+        <h1>Progressi Scheda</h1>
+        
+        <table id="schedeTable" class="display">
+            <thead>
+                <tr>
+                   
+                    <th>Scheda</th>
+                    <th>Data</th>
+                    <th>Azione</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for scheda in eserciziScheda %}
+                    <tr>
+                       
+                        <td>{{ scheda.scheda }}</td>
+                        <td>{{ scheda.data.strftime('%m-%d-%Y') }}</td>
+                       
+                        <td>
+					
+						<a href="{{ url_for('user.progr_eserciziScheda', data=scheda.data, schedaid = scheda.scheda) }}">
+								<button type="button">Esercizi</button>
+							</a>
+						
+                        
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+		 {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+    </div>
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#schedeTable').DataTable({
+            autoWidth: false,          // Non forza larghezze fisse
+            scrollX: false,            // Evita lo scroll orizzontale
+            paging: true,
+            searching: true,
+            info: true,
+            ordering: true,
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/Italian.json"
+            },
+            columnDefs: [
+                {
+                    targets: "_all",
+                    className: "dt-body-wrap" // Classe utile se vuoi stilizzare via CSS
+                }
+            ]
+        });
+    });
+</script>
+</body>
+</html>

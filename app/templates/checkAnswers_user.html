@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titolo }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .check-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+			text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+			text-align: left;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 6px;
+			text-align: left;
+        }
+
+        .answer-box {
+            background: #f5f7fa;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            min-height: 60px;
+            white-space: pre-wrap;
+			color: #000;
+			text-align: left;
+        }
+
+        .note-box {
+            background: #fff8e1;
+            border: 1px solid #f0d98c;
+        }
+
+        h1 {
+            text-align: center;
+			
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-bar">
+        <a href="{{ url_for('user.viewcheck') }}">← Torna ai check</a>
+    </div>
+
+    <h1>Risposte Questionario</h1>
+
+    <div class="check-container">
+
+        {% if parametri.domanda1 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda1 }}</label>
+            <div class="answer-box">{{ check.risposta1 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda2 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda2 }}</label>
+            <div class="answer-box">{{ check.risposta2 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda3 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda3 }}</label>
+            <div class="answer-box">{{ check.risposta3 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda4 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda4 }}</label>
+            <div class="answer-box">{{ check.risposta4 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda5 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda5 }}</label>
+            <div class="answer-box">{{ check.risposta5 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda6 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda6 }}</label>
+            <div class="answer-box">{{ check.risposta6 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda7 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda7 }}</label>
+            <div class="answer-box">{{ check.risposta7 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda8 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda8 }}</label>
+            <div class="answer-box">{{ check.risposta8 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda9 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda9 }}</label>
+            <div class="answer-box">{{ check.risposta9 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        {% if parametri.domanda10 %}
+        <div class="form-group">
+            <label>{{ parametri.domanda10 }}</label>
+            <div class="answer-box">{{ check.risposta10 or "—" }}</div>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label>Note aggiuntive</label>
+            <div class="answer-box note-box">{{ check.note or "—" }}</div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

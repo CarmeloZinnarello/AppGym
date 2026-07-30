@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Elenco Check</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+<div class="nav-bar">
+        <a href="{{ url_for('user.dashboard') }}">Torna alla Dashboard</a>
+    </div>
+<header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+            <h1>{{ titolo }}</h1>
+        </header>
+    
+    <a href="{{ url_for('user.send_check') }}">
+        <button class="roster-button" style="margin-bottom: 15px;">
+            <i class="fas fa-plus"></i> Invia Check
+        </button>
+    </a>
+    <h1>
+        <i class="fas fa-calendar-alt"></i> Elenco Check
+    </h1>
+
+   
+
+
+    {% if check %}
+        <table id="appuntamentiTable" class="display" cellpadding="8">
+            <thead>
+                <tr>
+					<th>Utente</th>
+                    <th>Data</th>
+                  
+                    
+					<th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in check %}
+                <tr>
+					<td>{{ a.user.nome }} {{ a.user.cognome }}</td>
+                    <td>{{ a.data_inserimento.strftime('%d/%m/%Y') }}</td>
+                    
+                   
+					<td>
+					<button type="button"
+							class="btn-view"
+							onclick="window.location.href='{{ url_for('user.view_single_check', check_id=a.id) }}'">
+						<i class="fas fa-eye"></i> Visualizza
+					</button>
+						<a href="{{ url_for('user.edit_check', check_id=a.id) }}">
+								<button type="button">Modifica</button>
+							</a>
+					<form method="POST"
+								  action="{{ url_for('user.delete_check', check_id=a.id) }}"
+								  style="display:inline;">
+								<button class="delete-button" type="submit">Elimina</button>
+							</form>
+					</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Nessun check inviato.</p>
+    {% endif %}
+	
+	  {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+    const oggi = new Date();
+
+    $('#appuntamentiTable').DataTable({
+        paging: true,
+        searching: true,
+        ordering: true,
+        order: [[0, 'asc'], [1, 'asc']],
+        language: {
+            search: "Cerca:",
+            lengthMenu: "Mostra _MENU_ appuntamenti",
+            info: "Da _START_ a _END_ di _TOTAL_ appuntamenti",
+            infoEmpty: "Nessun appuntamento disponibile",
+            zeroRecords: "Nessun risultato trovato",
+            paginate: {
+                previous: "Precedente",
+                next: "Successivo"
+            }
+        },
+
+        rowCallback: function (row, data) {
+            // data[0] = Data (dd/mm/yyyy)
+            // data[1] = Ora (HH:mm)
+
+            const partiData = data[0].split('/');
+            const partiOra = data[1].split(':');
+
+            const dataAppuntamento = new Date(
+                partiData[2],        // anno
+                partiData[1] - 1,    // mese
+                partiData[0],        // giorno
+                partiOra[0],         // ore
+                partiOra[1]          // minuti
+            );
+
+            if (dataAppuntamento < oggi) {
+                $(row).addClass('appuntamento-scaduto');
+            }
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

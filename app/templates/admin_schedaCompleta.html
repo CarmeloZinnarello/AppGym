@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <title>Scheda</title>
+
+    <style>
+    body {
+        background-color: white;
+        font-family: Arial, sans-serif;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    h2 {
+        margin-top: 40px;
+    }
+
+    .ordine-cell {
+        width: 60px;
+        font-weight: bold;
+        background-color: #f5f5f5;
+        user-select: none;
+    }
+
+    .group-leader .ordine-cell {
+        cursor: move;
+    }
+
+    .non-draggable .ordine-cell {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .sortable-ghost {
+        opacity: 0.4;
+        background-color: #d6eaff;
+    }
+
+    .sortable-chosen {
+        background-color: #eef6ff;
+    }
+
+    .gruppo-esercizi {
+        background-color: #eef6ff;
+    }
+
+    .gruppo-top td {
+        border-top: 4px solid #2b6cb0 !important;
+    }
+
+    .gruppo-bottom td {
+        border-bottom: 4px solid #2b6cb0 !important;
+    }
+
+    .gruppo-esercizi td {
+        font-weight: 600;
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav-bar">
+
+        <a href="{% if current_user.is_admin %}{{ url_for('admin.manage_schede') }}{% else %}{{ url_for('user.manage_schede') }}{% endif %}">
+            Torna alle Schede
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}"
+             alt="Logo"
+             class="logo">
+
+        <h1>{{ titolo }}</h1>
+    </header>
+
+    <h1>Scheda esercizi</h1>
+
+    <a href="{{ url_for('admin.add_esercizioScheda', scheda_id=scheda_id) }}">
+        <button type="button">Aggiungi esercizio</button>
+    </a>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% for giorno, esercizi in esercizi_per_giorno.items() %}
+
+        <h2>Giorno {{ giorno }}</h2>
+		<div >
+			{{ tipi_per_giorno.get(giorno, '') }}
+		</div>
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Ord.</th>
+                    <th>Esercizio</th>
+                    <th>Serie</th>
+                    <th>Recupero</th>
+                    <th>Note</th>
+                    <th>Azione</th>
+                </tr>
+            </thead>
+
+            <tbody class="sortable-body">
+
+                {% for e in esercizi %}
+
+                <tr data-id="{{ e.id }}"
+                    data-numero="{{ e.numero }}">
+
+                    <td class="ordine-cell">
+                        {{ e.numero }}
+                    </td>
+
+                    <td>{{ e.Tipoesercizi.nome }}</td>
+
+                    <td>{{ e.serie }}</td>
+
+                    <td>{{ e.recupero }}</td>
+
+                    <td>{{ e.note }}</td>
+
+                    <td>
+
+                        <a href="{{ url_for('admin.modifica_esercizio', id=e.id) }}">
+                            <button type="button">
+                                Modifica esercizio
+                            </button>
+                        </a>
+
+                        <form method="POST"
+                              action="{{ url_for('admin.delete_EsercizioScheda', id=e.id) }}"
+                              style="display:inline;">
+
+                            <button class="delete-button"
+                                    type="submit">
+                                Elimina
+                            </button>
+
+                            <input type="hidden"
+                                   name="csrf_token"
+                                   value="{{ csrf_token() }}">
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    {% endfor %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+<script>
+
+function evidenziaGruppi(tbody) {
+
+    tbody.querySelectorAll('tr').forEach(row => {
+
+        row.classList.remove(
+            'gruppo-esercizi',
+            'gruppo-top',
+            'gruppo-bottom',
+            'group-leader',
+            'non-draggable'
+        );
+
+    });
+
+    const gruppi = {};
+
+    tbody.querySelectorAll('tr').forEach(row => {
+
+        const numero = row.dataset.numero;
+
+        if (!gruppi[numero]) {
+            gruppi[numero] = [];
+        }
+
+        gruppi[numero].push(row);
+
+    });
+
+    Object.values(gruppi).forEach(rows => {
+
+        rows[0].classList.add('group-leader');
+
+        for (let i = 1; i < rows.length; i++) {
+            rows[i].classList.add('non-draggable');
+        }
+
+        if (rows.length > 1) {
+
+            rows.forEach(row => {
+                row.classList.add('gruppo-esercizi');
+            });
+
+            rows[0].classList.add('gruppo-top');
+            rows[rows.length - 1].classList.add('gruppo-bottom');
+        }
+
+    });
+
+}
+
+function salvaOrdine(tbody) {
+
+    let ordine = [];
+    let numeroCorrente = 1;
+
+    const gruppi = {};
+
+    tbody.querySelectorAll('tr').forEach(row => {
+
+        const numeroOriginale = row.dataset.numero;
+
+        if (!gruppi[numeroOriginale]) {
+            gruppi[numeroOriginale] = numeroCorrente++;
+        }
+
+        const nuovoNumero = gruppi[numeroOriginale];
+
+        row.dataset.numero = nuovoNumero;
+
+        row.querySelector('.ordine-cell').innerText = nuovoNumero;
+
+        ordine.push({
+            id: parseInt(row.dataset.id),
+            numero: nuovoNumero
+        });
+
+    });
+
+    evidenziaGruppi(tbody);
+
+    fetch('{{ url_for("admin.aggiorna_ordine_esercizi") }}', {
+
+        method: 'POST',
+
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        },
+
+        body: JSON.stringify({
+            ordine: ordine
+        })
+
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if (!data.success) {
+            alert('Errore durante il salvataggio');
+        }
+
+    })
+    .catch(error => {
+
+        console.error(error);
+        alert('Errore durante il salvataggio');
+
+    });
+
+}
+
+document.querySelectorAll('.sortable-body').forEach(function(tbody) {
+
+    evidenziaGruppi(tbody);
+
+    let draggedGroup = [];
+
+    new Sortable(tbody, {
+
+        handle: '.ordine-cell',
+        animation: 150,
+
+        onMove: function(evt) {
+
+            return evt.dragged.classList.contains('group-leader');
+
+        },
+
+        onStart: function(evt) {
+
+            const numero = evt.item.dataset.numero;
+
+            draggedGroup = Array.from(
+                tbody.querySelectorAll(
+                    'tr[data-numero="' + numero + '"]'
+                )
+            );
+
+        },
+
+        onEnd: function(evt) {
+
+            if (draggedGroup.length > 1) {
+
+                const firstRow = draggedGroup[0];
+
+                let current = firstRow;
+
+                draggedGroup.slice(1).forEach(row => {
+
+                    current.after(row);
+                    current = row;
+
+                });
+
+            }
+
+            salvaOrdine(tbody);
+
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

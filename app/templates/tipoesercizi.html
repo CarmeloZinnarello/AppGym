@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Tipo Esercizi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+</head>
+<body>
+ <div class="container">
+        <div class="nav-bar">
+            <a href="{{ url_for('admin.dashboard') }}">Torna alla Dashboard</a>
+        </div>
+        <header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+            <h1>{{ titolo }}</h1>
+        </header>
+			<form method="POST" action="{{ url_for('admin.upload_excel_tipoesercizi') }}" enctype="multipart/form-data">
+				<input type="file" name="file" accept=".csv" required>
+				<button type="submit">Carica da csv</button>
+			</form>
+			<hr>
+		<!-- FORM INSERIMENTO -->
+		<h1>Aggiunta esercizi</h1>
+		<form method="POST">
+		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+			<input type="text" name="nome" placeholder="Nome esercizio" required>
+
+			<input type="text" name="link" placeholder="Link (facoltativo)">
+
+			<select name="tipo" required>
+				<option value="">-- Seleziona tipo --</option>
+				<option value="Gambe">Gambe</option>
+				<option value="Petto">Petto</option>
+				<option value="Schiena">Schiena</option>
+				<option value="Spalle">Spalle</option>
+				<option value="Braccia">Braccia</option>
+				<option value="Core">Core</option>
+				<option value="Stretching">Stretching</option>
+			</select>
+
+			<button type="submit">Aggiungi</button>
+		</form>
+
+			<hr>
+			
+		<h1>Elenco esercizi</h1>
+
+			<!-- TABELLA -->
+			<table border="1" cellpadding="5">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Link</th>
+						<th>Tipo</th>
+						<th>Azioni</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for r in lista %}
+					<tr>
+						<td>{{ r.nome }}</td>
+						<td>
+							{% if r.link %}
+								<a href="{{ r.link }}" target="_blank">Guarda esempio</a>
+							{% endif %}
+						</td>
+						<td>{{ r.tipo }}</td>
+						<td>
+						<a href="{{ url_for('admin.modifica_tipoesercizio', id=r.id) }}"><button type="button">
+								✏️ Modifica</button>
+							</a>
+
+							<a href="{{ url_for('admin.elimina_tipoesercizi', id=r.id) }}"
+							   onclick="return confirm('Eliminare questo esercizio?')"><button class="delete-button"type="button">
+								❌ Elimina</button>
+							</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+ {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+	<script>
+$(document).ready(function () {
+    $('table').DataTable({
+        paging: true,
+        searching: true,
+        ordering: true,
+        info: true,
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/it-IT.json"
+        }
+    });
+});
+</script>
+</body>
+</html>

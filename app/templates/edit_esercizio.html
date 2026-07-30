@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica Esercizio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .form-grid {
+            gap: 6px;
+        }
+
+        .form-grid input,
+		.form-grid select,
+		.form-grid textarea {
+			height: 35px;          /* 🔥 altezza ridotta */
+			padding: 1px 1px;      /* meno spazio interno */
+			font-size: 15px;       /* testo più compatto */
+			box-sizing: 60%;
+			width: 100%;
+		}
+
+        .form-grid textarea {
+            height: 60px;
+        }
+
+        h1 {
+            margin: 10px 0 15px 0;
+        }
+
+        .form-grid button {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+<div class="nav-bar">
+            <a href="{% if current_user.is_admin %}{{ url_for('admin.manage_schede') }}{% else %}{{ url_for('user.manage_schede') }}{% endif %}">
+    Torna alle Schede
+</a>
+        </div>
+    <h1>Modifica Esercizio</h1>
+
+    <form method="POST" class="form-grid">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="id" value="{{ esercizio.id }}">
+		<input type="hidden" id="isCompleta" value="{{ isCompleta }}">
+        <!-- Giorno -->
+        <label>Giorno:</label>
+        <input type="number" name="giorno" value="{{ esercizio.giorno }}" required>
+
+        <!-- Ricerca esercizio -->
+        <label>Esercizio:</label>
+        <input list="lista_esercizi" id="esercizio_search"
+               value="{{esercizio.Tipoesercizi.nome }}- {{ esercizio.Tipoesercizi.tipo }}"
+               autocomplete="off">
+
+        <datalist id="lista_esercizi">
+            {% for tipo in tipoesercizi %}
+                <option value="{{ tipo.nome }} - {{ tipo.tipo }}" data-id="{{ tipo.id }}"></option>
+            {% endfor %}
+        </datalist>
+
+        <input type="hidden" name="esercizio" id="esercizio_id"
+               value="{{ esercizio.tipo_id }}">
+
+        <!-- Numero -->
+        <label>Numero Esercizio:</label>
+        <input type="number" name="numero" value="{{ esercizio.numero }}" required>
+
+        <!-- Recupero -->
+        <label>Recupero:</label>
+        <input name="recupero" value="{{ esercizio.recupero }}" required>
+
+        <!-- Serie -->
+        <label>Serie:</label>
+        <input type="number" name="serie" value="{{ esercizio.serie }}">
+
+        <!-- Note -->
+        <label>Indicazioni:</label>
+        <textarea name="note">{{ esercizio.note }}</textarea>
+		<div class="form-group full-width">
+        <button type="submit">Salva modifiche</button>
+		</div>
+    </form>
+</div>
+
+<script>
+const input = document.getElementById("esercizio_search");
+const datalist = document.getElementById("lista_esercizi");
+const hidden = document.getElementById("esercizio_id");
+
+input.addEventListener("input", function() {
+    const options = datalist.options;
+
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === input.value) {
+            hidden.value = options[i].dataset.id;
+            return;
+        }
+    }
+
+    hidden.value = "";
+});
+</script>
+
+</body>
+</html>

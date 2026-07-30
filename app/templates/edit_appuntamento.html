@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifica Appuntamento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        <h1>{{ titolo }}</h1>
+    </header>
+
+    <h1>
+        <i class="fas fa-calendar-edit"></i> Modifica Appuntamento
+    </h1>
+
+    <form method="POST" class="form-grid">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <!-- 👤 UTENTE -->
+        <label>Seleziona Utente</label>
+        <select name="user_id" required>
+            {% for user in users %}
+                <option value="{{ user.id }}"
+                    {% if user.id == appuntamento.userid %}selected{% endif %}>
+                    {{ user.nome }} {{ user.cognome }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- 📅 DATA / ORA -->
+        <label>Data e ora</label>
+        <input type="datetime-local"
+               name="data"
+               value="{{ appuntamento.data.strftime('%Y-%m-%dT%H:%M') }}"
+               required>
+		<label>Tipologia</label>
+			<select name="tipologia" required>
+        <option value="Appuntamento"
+            {% if appuntamento.tipologia == 'Appuntamento' %}selected{% endif %}>
+            Appuntamento
+        </option>
+
+        <option value="Scadenza"
+            {% if appuntamento.tipologia == 'Scadenza' %}selected{% endif %}>
+            Scadenza
+        </option>
+
+        <option value="Check"
+            {% if appuntamento.tipologia == 'Check' %}selected{% endif %}>
+            Check
+        </option>
+    </select>
+
+        <!-- 💾 SALVA -->
+        <button type="submit">
+            <i class="fas fa-save"></i> Salva modifiche
+        </button>
+
+        <!-- ❌ ANNULLA -->
+        <button type="button"
+                onclick="window.location.href='{{ url_for('admin.appuntamenti') }}'">
+            Annulla
+        </button>
+
+    </form>
+</div>
+
+</body>
+</html>

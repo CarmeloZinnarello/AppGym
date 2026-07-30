@@ -1,0 +1,1313 @@
+/* Imposta il body con uno sfondo sfumato */
+body {
+    min-height: 100vh;  
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: white;  /*Sfumatura verde petrolio */
+    /*margin: 0;*/
+    font-family: Arial, sans-serif;
+	color: #ffffff; /* colore del testo */
+}
+
+h1 {
+    color: #f2b705; /* dorato classico */
+}
+
+/* Testi DataTables (Show entries, Search, info) */
+.dataTables_wrapper,
+.dataTables_wrapper label,
+.dataTables_wrapper .dataTables_info {
+    color: #ffffff !important; /* bianco */
+}
+
+/* Select (numero record) */
+.dataTables_length select {
+    color: #000000;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}
+
+/* Input ricerca */
+.dataTables_filter input {
+    color: #000000;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+}
+
+
+/* Input ricerca */
+.dataTables_filter input {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #ccc;
+}
+
+/* Select numero record */
+.dataTables_length select {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #ccc;
+}
+
+/* Info sotto la tabella */
+.dataTables_info {
+    color: #ffffff !important;
+}
+
+/* Paginazione */
+.dataTables_paginate a {
+    color: #ffffff !important;
+}
+
+/* Freccette ordinamento */
+table.dataTable thead .sorting:before,
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting_asc:before,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_desc:before,
+table.dataTable thead .sorting_desc:after {
+    color: #ffffff !important;
+}
+/* Contenitore principale */
+.container {
+    flex-grow: 1;
+    overflow-y: auto; 
+    padding: 20px 20px;
+	background: #041b4d; 
+    
+	background-repeat: no-repeat;
+	background-position: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    margin: 20px auto;
+    text-align: center;
+}
+
+/* Barra di navigazione */
+.nav-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 10px;
+    
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.nav-bar a {
+    text-decoration: none;
+	background: #f2b705;
+	color: #041b4d;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+.nav-bar a:hover {
+    background: #0056b3;
+}
+
+/* Logo */
+.logo {
+    max-width: 300px;
+    max-height: 350px;
+    margin-bottom: 10px;
+	border-radius: 10px; 
+}
+
+/* Form di login */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px; /* Opzionale: limita la larghezza del form */
+    margin: auto;
+}
+
+.login-form input {
+    width: calc(100% - 20px); /* Garantisce spazio uguale a destra e sinistra */
+    margin: 5px 0;
+    padding: 8px 10px; /* Padding uguale su entrambi i lati */
+    border: 1px solid #ccc; /* Bordo sottile per estetica */
+    border-radius: 5px; /* Angoli arrotondati */
+    box-sizing: border-box; /* Impedisce che il padding allarghi l'input */
+}
+
+.login-form button {
+    width: calc(100% - 100px);
+    padding: 8px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.login-form button:hover {
+    background: #0056b3;
+}
+
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.action-buttons .row {
+    display: flex;
+    gap: 6px;
+}
+
+.action-buttons button {
+    width: 120px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.appuntamento-scaduto td {
+    background-color: #fff3cd !important;
+}
+
+.esercizi-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+/* RESPONSIVE: 1 COLONNA SU MOBILE */
+
+@media (max-width: 768px) {
+    .esercizi-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+.esercizio-card {
+    border: 1px solid #ddd;
+	border-radius: 6px;
+}
+
+.giorno-sezione {
+    display: none;
+}
+
+.giorno-sezione.active {
+    display: block;
+}
+
+.giorno-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.giorno-nav button {
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+/* Messaggi flash */
+.flash-messages p {
+    color: red;
+}
+
+/* Stile generale per i bottoni */
+button {
+     background: #f2b705;
+	color: #041b4d;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Contenitore tabella con scroll verticale */
+.table-container {
+    max-height: 500px;  
+    overflow-y: auto;  
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+/* Tabella */
+table {
+    width: 100%;
+    border-collapse: collapse;
+	color: black;
+}
+
+th, td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Colore testo nella tabella */
+.table-container table {
+    color: black;  /* o un colore che stia bene col tuo sfondo */
+    background-color: white; /* opzionale: sfondo bianco per contrasto */
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* intestazione della tabella */
+.table-container th {
+    background-color: #5FA88F;  /* verde petrolio */
+    color: white;               /* testo bianco nelle intestazioni */
+    padding: 8px;
+}
+
+/* celle */
+.table-container td {
+    color: black;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Pulsanti allineati e centrati */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button-groupFooter {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button-group button {
+    width: auto; /* Imposta larghezza automatica invece di 100% */
+    min-width: 150px; /* Imposta una larghezza minima */
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+.button-group button:hover {
+    background-color: #0056b3;
+}
+
+/* Layout form con etichette a sinistra e campi a destra */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Etichette più strette dei campi */
+    gap: 10px;
+    align-items: center;
+    max-width: 600px;
+    margin: auto;
+}
+
+.form-grid-menu{
+    display: grid;
+    grid-template-columns: auto auto; /* Etichette più strette dei campi */
+    gap: 10px;
+    align-items: center;
+    max-width: 600px;
+    margin: auto;
+}
+
+.form-grid-roster {
+    display: grid;
+    grid-template-columns: auto auto auto; /* Etichette più strette dei campi */
+    gap: 5px;
+    align-items: center;
+    max-width: 550px;
+    margin: auto;
+}
+
+.form-grid-roster select {
+    min-width: 200px; /* Imposta una larghezza minima */
+    max-width: 250px; /* Imposta una larghezza massima */
+}
+
+.form-grid-roster input {
+    min-width: 40px; 
+    max-width: 60px; /* Limita la larghezza massima */
+}
+
+.form-group {
+    display: contents; /* Mantiene il layout senza aggiungere margini inutili */
+}
+
+label {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.full-width {
+    grid-column: span 2;
+    text-align: center; /* Centra il contenuto, quindi anche i bottoni */
+    display: flex;
+    justify-content: center;
+	margin-top: 20px;
+}
+
+
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+    font-weight: bold;
+}
+.delete-button:hover {
+    background-color: #a71d2a; /* Verde più scuro al passaggio del mouse */
+}
+
+.delete-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.small-delete-button {
+    background-color: #dc3545;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;  /* Riduce la dimensione del testo */
+    padding: 5px 8px;  /* Rende il bottone più compatto */
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.small-delete-button:hover {
+    background-color: #a71d2a; /* Rosso più scuro al passaggio del mouse */
+}
+
+.roster-button {
+    background-color: #66bb6a; /* Verde più chiaro */
+    color: white;
+    font-weight: bold;
+}
+.roster-button:hover {
+    background-color: #418850; /* Verde più scuro al passaggio del mouse */
+}
+
+/* 📱 RESPONSIVE DESIGN 📱 */
+@media screen and (max-width: 768px) {
+    .container {
+        max-width: 95%;
+        padding: 15px;
+    }
+
+    .nav-bar {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 5px;
+    }
+
+    .nav-bar a {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .logo {
+        max-width: 150px;
+        max-height: 150px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; /* Una sola colonna nei dispositivi piccoli */
+    }
+
+    label {
+        text-align: left;
+        padding-right: 0;
+    }
+
+    .table-container {
+        overflow-x: auto; /* Aggiunge lo scroll orizzontale se necessario */
+    }
+
+    table {
+        font-size: 14px;
+    }
+}
+.team-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Assicura che l'immagine riempia lo spazio senza distorsioni */
+    border-radius: 10px; /* Opzionale: smussa gli angoli per un aspetto più gradevole */
+}
+
+.team-image-edit {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Assicura che l'immagine riempia lo spazio senza distorsioni */
+    border-radius: 10px; /* Opzionale: smussa gli angoli per un aspetto più gradevole */
+}
+
+.text-red {
+    color: red;
+    font-weight: bold;
+}
+
+.swap-button {
+    background-color: #ff9800; /* Arancione */
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+	text-decoration: none;
+}
+
+.swap-button:hover {
+    background-color: #e68900; /* Arancione più scuro al passaggio del mouse */
+}
+
+select:disabled {
+    color: black;  /* Mantiene il testo visibile */
+    background-color: #f0f0f0; /* Colore di sfondo leggermente grigio */
+    border: 1px solid #ccc; /* Bordo visibile */
+    opacity: 1; /* Rimuove l'effetto sbiadito */
+    cursor: not-allowed; /* Mantiene il cursore di "blocco" */
+}
+.giornata-divider {
+    background-color: #f4f4f4;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.giornata-divider td {
+    padding: 10px;
+    border-top: 3px solid #000;
+}
+
+.filter-container{
+	padding: 1% 1% 2% 1%;
+}
+
+.standings-button {
+    background-color: #28a745; /* Verde */
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.standings-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.standings-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.standings-note{
+	color: red;
+	text-align: center;
+    margin-top: 20px;
+	
+}
+
+#incassi {
+  width: 3em;
+}
+
+h3 {
+    color: red;       /* Imposta il colore del testo a rosso */
+    text-align: left; /* Allinea il testo a sinistra */
+}
+
+
+#create-operation-btn {
+    background-color: #28a745; /* Verde */
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+#create-operation-btn:hover {
+    background-color: #218838; /* Verde più scuro */
+}
+
+/* Stile per il bottone "Rilancia" */
+#bid-operation-btn {
+    background-color: #ffc107; /* Giallo */
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+#bid-operation-btn:hover {
+    background-color: #e0a800; /* Giallo più scuro */
+}
+
+/* Stile per i bottoni disabilitati */
+#roster-button:disabled,
+#create-operation-btn:disabled,
+#bid-operation-btn:disabled {
+    background-color: #ccc; /* Grigio */
+    color: #666;
+    cursor: not-allowed;
+}
+
+.main-layout {
+	width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80%;
+    padding: 20px;
+	max-width: auto;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.left-panel, .right-panel {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.center-panel {
+    width: 50%;
+    text-align: center;
+	align-items: center;
+}
+
+.center-panel img {
+    max-width: 70%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+.scroll-text {
+    width: 95%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    /* background-color: #f8f9fa; Colore di sfondo */
+    padding: 10px;
+	border-radius: 10px;
+}
+
+.scroll-text p {
+    display: inline-block;
+    min-width: 100%;
+    animation: marquee 10s linear infinite;
+    font-size: 18px;
+    color: #D4AF37;
+	text-transform: uppercase; /* MAIUSCOLO */
+    font-weight: bold;         /* GRASSETTO */
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+.formations-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-top: 20px;
+	color: black;
+}
+
+.formation-section {
+    width: 48%;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.formation-section h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.formation-row {
+    margin-bottom: 10px;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .formations-container {
+        flex-direction: column;
+    }
+    .formation-section {
+        width: 100%;
+    }
+}
+
+.teams-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.team-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 150px;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+/* Su schermi piccoli (cellulare) */
+@media screen and (max-width: 768px) {
+    .teams-container {
+        grid-template-columns: repeat(2, 1fr); /* 🔑 due colonne */
+    }
+}
+.team-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.team-name {
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+}
+
+.team-name:hover {
+    color: #007bff;
+}
+
+.bracket-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.round {
+    width: 25%;
+    text-align: center;
+}
+
+.match {
+    border: 1px solid #000;
+    padding: 10px;
+    margin: 10px;
+    background-color: #f4f4f4;
+}
+
+.team {
+    font-weight: bold;
+}
+
+.vs {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.winner {
+    color: green;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: 	#f5f5f5;
+}
+
+table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+#votiTable td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lampeggiante {
+  color: red;
+  font-weight: bold;
+  animation: lampeggia 1s infinite;
+  font-size: 14px;
+}
+
+@keyframes lampeggia {
+  0%   { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.foto-marcatore {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+
+    margin: 10px auto;
+    display: block;
+}
+
+
+/* riga separatrice sottile rossa */
+.separator-row td {
+  background-color: #5FA88F;
+  height: 6px;
+  padding: 0;
+  border: none;
+}
+
+/* Layout principale */
+.main-layout {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;   /* permette il "riposizionamento" su più righe */
+}
+
+/* Ogni fieldset prende 1/3 della larghezza su desktop */
+.main-layout fieldset {
+    flex: 1;
+    min-width: 250px; /* garantisce leggibilità */
+}
+
+/* 📱 Responsive: su schermi piccoli vanno in colonna */
+@media screen and (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .main-layout fieldset {
+        width: 100%;
+    }
+}
+
+.image-wrapper {
+    max-width: 1200px;   /* puoi regolare a piacere */
+    margin: 0 auto;
+}
+
+.image-wrapper img {
+    width: 100%; 
+    height: auto; 
+    display: block;
+    border-radius: 10px; /* opzionale */
+}
+.main-layout fieldset {
+    flex: 2;          /* invece di 1 → raddoppia lo spazio assegnato */
+    min-width: 200px; /* aumenta la dimensione minima */
+	border-radius: 10px; 
+}
+
+.identity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 colonne su desktop */
+    gap: 20px;
+    margin-top: 15px;
+    align-items: start;
+    text-align: center;
+}
+
+.identity-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* 📱 Responsive */
+@media screen and (max-width: 768px) {
+    .identity-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colonne su mobile */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .identity-grid {
+        grid-template-columns: 1fr; /* 1 colonna su schermi molto piccoli */
+    }
+}
+
+.username {
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    background: linear-gradient(#D4AF37); /*verde elegante */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /*animation: glow 2s ease-in-out infinite alternate;*/
+}
+
+/* 📱 Riduci su mobile */
+@media screen and (max-width: 768px) {
+    .username {
+        font-size: 18px; /* più piccolo da cell */
+    }
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px rgba(39, 174, 96, 0.5), 
+                     0 0 10px rgba(39, 174, 96, 0.3);
+    }
+    to {
+        text-shadow: 0 0 15px rgba(46, 204, 113, 0.8), 
+                     0 0 25px rgba(39, 174, 96, 0.6);
+    }
+}
+
+.green-row {
+    background-color: white;
+    color: green;
+    font-weight: bold;
+}
+
+.blue-row {
+    background-color: white;
+    color: blue;
+    font-weight: bold;
+}
+
+/* 📱 Responsività per i bottoni delle competizioni */
+.competizioni-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.swap-button img {
+    height: 60px;
+    width: 50px;
+}
+
+
+.swap-button {
+    display: flex;              /* 🔑 attiva flexbox */
+    align-items: center;        /* 🔑 centra verticalmente logo + testo */
+    justify-content: center;    /* centra orizzontalmente */
+    gap: 8px;                   /* spazio tra logo e testo */
+    padding: 10px 15px;
+    font-size: 16px;
+}
+@media screen and (max-width: 768px) {
+    .competizioni-container {
+        display: grid;
+        grid-template-columns: repeat(4, auto); /* colonne larghe quanto i bottoni */
+        justify-content: center;  /* 🔑 centra il grid */
+        gap: 10px;
+    }
+
+    .swap-button {
+        font-size: 14px;
+        padding: 10px 10px;
+    }
+
+    .swap-button img {
+        height: 40px;   /* logo più piccolo */
+        width: 35px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main-layout fieldset {
+        width: 100%;       /* per adattarsi bene allo schermo */
+        max-width: 500px;  /* opzionale: per non allargarsi troppo */
+    }
+
+    /* Sezione centrale prima di sinistra e destra */
+    .main-layout fieldset.image-wrapper {
+        order: -1;
+    }
+}
+
+* Tabelle di scambio - desktop */
+.exchange-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.exchange-table thead {
+    background-color: #f9f9f9;
+}
+
+.exchange-table th,
+.exchange-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+    word-break: break-word;
+}
+
+/* Tabelle responsive per dispositivi mobili */
+@media screen and (max-width: 768px) {
+    .exchange-table,
+    .exchange-table thead,
+    .exchange-table tbody,
+    .exchange-table th,
+    .exchange-table td,
+    .exchange-table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .exchange-table thead {
+        display: none;
+    }
+
+    .exchange-table tr {
+        margin-bottom: 15px;
+       
+    }
+
+   /* Forza le celle a riempire tutta la larghezza visibile */
+.exchange-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box; /* ✅ Questo è fondamentale */
+    background-color: white; /* ✅ Assicura che lo sfondo sia visibile */
+}
+
+    .exchange-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        flex-shrink: 0;
+        width: 45%;
+       
+        color: #555;
+    }
+}
+/* Bottoni specifici per la pagina "Scambi" */
+.exchange-button {
+    padding: 6px 10px;
+    font-size: 14px;
+    white-space: nowrap;       /* ✅ Non va a capo */
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Varianti di stato */
+.exchange-button.accept {
+    background-color: #4CAF50;
+    color: white;
+    margin-right: 5px;
+}
+
+.exchange-button.delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.exchange-button.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Bottone crea scambio */
+#create-operation-btn {
+    padding: 10px 16px;
+    font-size: 16px;
+    white-space: nowrap;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+#operazioniTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#operazioniTable thead tr {
+  display: table-row; /* mantiene header classico */
+}
+
+#operazioniTable tbody tr {
+  display: table-row; /* default desktop */
+  background-color: white;
+}
+
+/* Responsive da mobile: trasformo ogni riga in grid */
+@media (max-width: 600px) {
+  #operazioniTable thead {
+    display: none; /* nascondo intestazione classica */
+  }
+
+  #operazioniTable tbody tr {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colonne */
+    grid-template-rows: repeat(2, auto); /* 2 righe */
+    gap: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+
+  #operazioniTable tbody tr td {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4px 8px;
+    border: none;
+  }
+
+  /* Aggiungo label “intestazioni” visive sopra ogni cella */
+  #operazioniTable tbody tr td:nth-child(1)::before { content: "Giocatore"; font-weight: bold; }
+  #operazioniTable tbody tr td:nth-child(2)::before { content: "Ruolo"; font-weight: bold; }
+  #operazioniTable tbody tr td:nth-child(3)::before { content: "Squadra Vincente"; font-weight: bold; }
+  #operazioniTable tbody tr td:nth-child(4)::before { content: "Valore Offerta"; font-weight: bold; }
+  #operazioniTable tbody tr td:nth-child(5)::before { content: "Scadenza"; font-weight: bold; }
+  #operazioniTable tbody tr td:nth-child(6)::before { content: "Azioni"; font-weight: bold; }
+
+  /* Stile per label prima del contenuto */
+  #operazioniTable tbody tr td::before {
+    display: block;
+    margin-bottom: 4px;
+    color: #555;
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 600px) {
+    #operazioniTable td:last-child input[type="number"] {
+		align-items: center;
+        width: 50px;
+        padding: 5px 5px;
+        font-size: 0.85em;
+    }
+}
+
+
+#tableCalendar {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#tableCalendar thead tr {
+  display: table-row; /* mantiene header classico */
+}
+
+#tableCalendar tbody tr {
+  display: table-row; /* default desktop */
+  background-color: white;
+}
+
+
+/* Responsive da mobile: trasformo ogni riga in grid */
+@media (max-width: 600px) {
+  #tableCalendar thead {
+    display: none; /* nascondo intestazione classica */
+  }
+
+  #tableCalendar tbody tr {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colonne */
+    grid-template-rows: repeat(2, auto); /* 2 righe */
+    gap: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+
+  #tableCalendar tbody tr td {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4px 8px;
+    border: none;
+  }
+
+  /* Aggiungo label “intestazioni” visive sopra ogni cella */
+  
+  #tableCalendar tbody tr td:nth-child(1)::before { content: "Squadra A"; font-weight: bold; }
+  #tableCalendar tbody tr td:nth-child(2)::before { content: "Squadra B"; font-weight: bold; }
+  #tableCalendar tbody tr td:nth-child(3)::before { content: "Risultato"; font-weight: bold; }
+  #tableCalendar tbody tr td:nth-child(4)::before { content: "Formazioni"; font-weight: bold; }
+  #tableCalendar tbody tr td:nth-child(5)::before { content: "Marcatori A"; font-weight: bold; }
+  #tableCalendar tbody tr td:nth-child(6)::before { content: "Marcatori B"; font-weight: bold; }
+
+  /* Stile per label prima del contenuto */
+  #tableCalendar tbody tr td::before {
+    display: block;
+    margin-bottom: 4px;
+    color: #555;
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 600px) {
+    #tableCalendar td:last-child input[type="number"] {
+		align-items: center;
+        width: 50px;
+        padding: 5px 5px;
+        font-size: 0.85em;
+    }
+}
+
+.separator-row td {
+  background: linear-gradient(to right, #ffecec, #fff);
+  border-top: 2px solid #cc0000;
+  padding: 10px 0;
+}
+
+.separator-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #a60000;
+  white-space: nowrap; /* 🔥 impedisce l'andare a capo */
+  text-align: center;
+}
+
+/* ottimizzazione per mobile */
+@media (max-width: 600px) {
+  .separator-content {
+    font-size: 0.85rem;
+    padding: 6px 0;
+  }
+  .separator-row td {
+    padding: 6px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Disattiva le etichette solo per le righe separatrici */
+  #tableCalendar .separator-row td::before {
+    content: none !important;
+  }
+}
+
+.competition-button {
+    background-color: white;          /* Sfondo bianco */
+    color: #ff9800;   
+    font-weight: bold;
+    padding: 4px 6px;
+    border: 5px solid #ff9800;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-flex;         /* allinea bene testo + immagine */
+    align-items: center;          /* centra verticalmente */
+    justify-content: center;      /* centra orizzontalmente */
+}
+
+.competition-button:hover {
+    background-color: #e68900; /* Arancione più scuro al passaggio del mouse */
+}
+
+.competition-button img {
+    height: 80px;                 /* altezza costante */
+    width: 50px;                  /* mantiene proporzioni */
+    object-fit: contain;          /* evita distorsioni */
+    margin-right: 0px;            /* spazio opzionale se aggiungi testo */
+}
+
+@media (max-width: 600px) {
+    .competition-button {
+        padding: 4px 6px;     /* dimezza il padding */
+        font-size: 12px;      /* testo più piccolo */
+        border-width: 3px;    /* bordo più sottile */
+    }
+
+    .competition-button img {
+        height: 50px;                 /* altezza costante */
+		width: 30px;              /* meno spazio tra logo e testo */
+    }
+}
+
+/* ===== FIX DATATABLE APPUNTAMENTI ===== */
+
+#appuntamentiTable {
+    color: white !important;
+}
+
+#appuntamentiTable tbody tr:nth-child(even),
+#appuntamentiTable tbody tr:nth-child(odd) {
+    background: rgba(255,255,255,0.06) !important;
+}
+
+#appuntamentiTable tbody td {
+    color: white !important;
+}
+
+#appuntamentiTable thead th {
+    background: #f2b705 !important;
+    color: #041b4d !important;
+}
+
+#appuntamentiTable tbody tr:hover {
+    background: rgba(255,255,255,0.12) !important;
+}

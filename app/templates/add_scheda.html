@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiungi Scheda</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+```
+<div class="container">
+    <div class="nav-bar">
+        <a href="{{ url_for('admin.dashboard') }}">Torna alla Dashboard</a>
+    </div>
+
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+        <h1>{{ titolo }}</h1>
+    </header>
+
+    <h1>Aggiungi Nuova Scheda</h1>
+
+    <form method="POST" class="form-grid">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <!-- 🔍 RICERCA UTENTE -->
+        <label for="user_search">Seleziona Utente</label>
+
+        <input list="lista_utenti" id="user_search" placeholder="Cerca utente..." autocomplete="off" required>
+
+        <datalist id="lista_utenti">
+            {% for u in user %}
+                <option value="{{ u.nome }} {{ u.cognome }}" data-id="{{ u.id }}"></option>
+            {% endfor %}
+        </datalist>
+
+        <!-- ID nascosto -->
+        <input type="hidden" name="user_id" id="user_id">
+
+        <!-- ALTRI CAMPI -->
+        <label>Titolo</label>
+        <input type="text" name="titolo" required>
+
+        <label>Data Inizio</label>
+        <input type="date" name="data_inizio" required>
+
+        <!--<label>Data Fine</label>
+        <input type="date" name="data_fine">-->
+		<label>Attiva</label>
+            <input type="checkbox" name="is_active" checked> 
+        <div class="form-group full-width">
+            <button type="submit" class="btn btn-success">Salva</button>
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+</div>
+
+<!-- SCRIPT PER COLLEGARE NOME → ID -->
+<script>
+const inputUser = document.getElementById("user_search");
+const datalistUser = document.getElementById("lista_utenti");
+const hiddenUser = document.getElementById("user_id");
+
+inputUser.addEventListener("input", function() {
+    const options = datalistUser.options;
+
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === inputUser.value) {
+            hiddenUser.value = options[i].dataset.id;
+            return;
+        }
+    }
+
+    hiddenUser.value = "";
+});
+</script>
+```
+
+</body>
+</html>

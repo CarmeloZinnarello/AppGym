@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="nav-bar">
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </div>
+
+        <header style="text-align: center;">
+            <!--<img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">-->
+            <h1>{{ titolo }}</h1>
+            <h2>Pannello di Gestione Admin</h2>
+        </header>
+		
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 30px;">
+
+            <fieldset style="min-width: 250px;">
+                <legend><i class="fas fa-users-cog"></i> Gestione Utenti & Pagamenti</legend>
+				  <a href="{{ url_for('admin.manage_users') }}">
+                    <button><i class="fas fa-users"></i> Gestione Utenti</button>
+                </a>
+            </fieldset>
+
+            <fieldset style="min-width: 250px;">
+                <legend><i class="fas fa-dumbbell"></i> Gestione Esercizi & Schede</legend>
+				<a href="{{ url_for('admin.manage_schede') }}">
+                    <button><i class="fas fa-users"></i> Gestione Schede</button>
+                </a>
+				<a href="{{ url_for('admin.gestione_tipoesercizi') }}">
+                    <button><i class="fas fa-users"></i> Gestione Esercizi</button>
+                </a>
+            </fieldset>
+			<fieldset style="min-width: 250px;">
+				<legend><i class="fas fa-list-alt"></i> Gestione Check & Appuntamenti</legend>
+				      <a href="{{ url_for('admin.check') }}">
+                    <button><i class="fas fa-check-circle"></i> Gestione Check</button>
+					</a>
+					  <a href="{{ url_for('admin.appuntamenti') }}">
+                    <button><i class="fas fa-calendar-alt"></i> Gestione Appuntamenti</button>
+					</a>
+					</fieldset>
+            <fieldset style="min-width: 250px;">
+                <legend><i class="fas fa-sliders-h"></i>Gestione Parametri</legend>
+               
+                <a href="{{ url_for('admin.manage_parameters') }}">
+                    <button><i class="fas fa-cogs fa-lg"></i> Gestione Parametri</button>
+                </a>
+            </fieldset>
+
+           
+
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
