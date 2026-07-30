@@ -4,15 +4,15 @@ from flask_login import LoginManager
 from werkzeug.security import generate_password_hash
 from flask_wtf.csrf import CSRFProtect
 
+from config import DevelopmentConfig
+
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.secret_key = "supersegreto"
+    app.config.from_object(DevelopmentConfig)
     app.config['SESSION_COOKIE_SECURE'] = True
     app.config['REMEMBER_COOKIE_SECURE'] = True
     app.config['SESSION_COOKIE_HTTPONLY'] = True
